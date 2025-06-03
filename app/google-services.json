@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "598036779826",
+    "firebase_url": "https://testlilygo-default-rtdb.firebaseio.com",
+    "project_id": "testlilygo",
+    "storage_bucket": "testlilygo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598036779826:android:e55fdb286ad80ee969fd2b",
+        "android_client_info": {
+          "package_name": "com.iset.saa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTjdV9v2D5N_JhFLpzymMtWKuXbjPPsko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598036779826:android:d9192850c498ca6d69fd2b",
+        "android_client_info": {
+          "package_name": "com.testlilygo.firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTjdV9v2D5N_JhFLpzymMtWKuXbjPPsko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

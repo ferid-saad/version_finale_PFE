@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cadre"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30sp"
+                android:gravity="center"
+
+                android:padding="12dp"
+                android:text="Tableau de Bord \n SMART FARM SAAD Ferid"
+                android:textColor="@color/color_app"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="30sp"
+
+                android:src="@drawable/logo_isett" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="12dp"
+
+            android:text="Données Météorologiques"
+            android:textColor="@color/color_app2"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/cadre"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_humidity_64"
+                    android:text="@string/humidite"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/humidite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="70%"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/cadre"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_temp_64"
+                    android:text="@string/temperature"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/temperature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="35°"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/cadre"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_humidity_sol_64"
+                    android:text="@string/humidite_de_sol"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/humiditeSol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="20%"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="12dp"
+
+            android:text="Les Actionneurs"
+            android:textColor="@color/color_app2"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cadre"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_motopompe" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="Motopompe"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="150dp"
+                    android:textColor="@color/color_app3"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/motopompe"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/toggle_selector"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_vanne" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="Vanne 1"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="150dp"
+                    android:textColor="@color/color_app3"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/vanne1"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/toggle_selector"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/ic_vanne" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="Vanne 2"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="150dp"
+                    android:textColor="@color/color_app3"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ToggleButton
+                    android:id="@+id/vanne2"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/toggle_selector"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

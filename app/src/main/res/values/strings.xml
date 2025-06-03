@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">saa</string>
+    <string name="forgot_password"><u>Forgot Password</u></string>
+    <string name="register_here"><u>Don\'t have an account? register here</u></string>
+    <string name="have_auccount"><u>Already Have An Auccount</u></string>
+    <string name="green_smart_application_n_saad_ferid">SMART FARM Application \n Saad Ferid</string>
+
+    <string name="temperature">Temperature</string>
+    <string name="temperatureExt">temperatureExt</string>
+    <string name="humidite">Humidité</string>
+    <string name="humidite_de_sol">humidite de sol</string>
+    <string name="motopompe">Motopompe</string>
+    <string name="smart_farm_n_saad_ferid">SMART_FARM \n Saad FERID</string>
+</resources>
