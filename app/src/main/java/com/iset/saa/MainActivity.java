@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {  //classe principale de lâ
         TextView temperature = findViewById(R.id.temperature);
         TextView humidite = findViewById(R.id.humidite);
         TextView humiditeSol = findViewById(R.id.humiditeSol);
-        //TextView temperatureExt = findViewById(R.id.temperatureExt);
+        TextView temperatureExt = findViewById(R.id.temperatureExt);
+        TextView humiditeExt = findViewById(R.id.humiditeExt);
 
         ToggleButton motopompe = findViewById(R.id.motopompe);
         ToggleButton vanne1 = findViewById(R.id.vanne1);
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity {  //classe principale de lâ
                 temperature.setText(String.valueOf(data.temperature) + "Â°");
                 humidite.setText(String.valueOf(data.humidite) + "%");
                 humiditeSol.setText(String.valueOf(data.humiditeSol) + "%");
+                temperatureExt.setText(String.valueOf(data.temperatureExt) + "Â°");
+                humiditeExt.setText(String.valueOf(data.humiditeExt) + "%");
+
 
                 motopompe.setChecked(Boolean.TRUE.equals(!data.motopompe));
                 vanne1.setChecked(Boolean.TRUE.equals(!data.vanne1));

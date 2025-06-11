@@ -9,8 +9,10 @@ import java.util.HashMap;
 @IgnoreExtraProperties
 public class DashData {
     public Long temperature;
+    public Long temperatureExt;
     public Long humidite;
     public Long humiditeSol;
+    public Long humiditeExt;
 
     public Boolean motopompe;
     public Boolean vanne1;
@@ -24,12 +26,16 @@ public class DashData {
             Long humidite,
             Long humiditeSol,
             boolean motopompe,
+            Long temperatureExt,
+            Long humiditeExt,
             boolean vanne1,
             boolean vanne2
     ) {
         this.temperature = temperature;
         this.humidite = humidite;
         this.humiditeSol = humiditeSol;
+        this.temperatureExt = temperatureExt;
+        this.humiditeExt = humiditeExt;
         this.motopompe = motopompe;
         this.vanne1 = vanne1;
         this.vanne2 = vanne2;
@@ -40,6 +46,8 @@ public class DashData {
         HashMap<String, Object> result = new HashMap<>();
         result.put("temperature", temperature);
         result.put("humidite", humidite);
+        result.put("temperatureExt", temperatureExt);
+        result.put("humiditeExt", humiditeExt);
         result.put("humiditeSol", humiditeSol);
         result.put("motopompe", motopompe);
         result.put("vanne1", vanne1);

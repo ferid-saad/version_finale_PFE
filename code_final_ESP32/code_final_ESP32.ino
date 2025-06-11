@@ -17,7 +17,6 @@
 #define Vanne2_PIN 14
 #define SerialAT Serial1
 
-
 #define SCK 18
 #define MISO 19
 #define MOSI 21
@@ -25,31 +24,34 @@
 #define RST 22
 #define DIO0 2
 
-#define TINY_GSM_RX_BUFFER 1024
+#define TINY_GSM_RX_BUFFER 2048
 
 const char apn[] = "internet.tn";
 const char gprsUser[] = "";
 const char gprsPass[] = "";
-
 
 const char server[] = "testlilygo-default-rtdb.firebaseio.com";
 const char resource[] = "/data.json";
 const int port = 443;
 const String FIREBASE_AUTH = "BDWr2Ie3r6dBvKFIG1tT8vzlaQgE20fHHw9B33MQ";
 
+// Météo OpenWeatherMap
+const char weatherHost[] = "api.openweathermap.org";
+const String city = "Tozeur";
+const String country = "TN";
+const String apiKey = "6603a9954dc7b45216a532ffadccf87a";  // clé API
+
 float temperature, humidite, humiditeSol;
 unsigned long lastFirebaseCheck = 0;
-const unsigned long FIREBASE_CHECK_INTERVAL = 5000;  // 5 secondes mais sa sera 30s en production
+const unsigned long FIREBASE_CHECK_INTERVAL = 1000;
 bool motopompeState = false;
 bool vanne1State = false;
 bool vanne2State = false;
 
 TinyGsm modem(Serial1);
-TinyGsmClientSecure client(modem, 0);
-HttpClient http_client(client, server, port);
-
-DynamicJsonDocument firebaseData(512);
-DynamicJsonDocument doc(256);
+TinyGsmClient client(modem,1);                 // HTTP (port 80 pour météo) en utilisant soket 1 pour éviter le conflit avec firebase
+TinyGsmClientSecure secureClient(modem, 0);  // HTTPS pour Firebase en utilisant soket 0 pour éviter le conflit avec OWM
+HttpClient http_client(secureClient, server, port);
 
 void setupModem() {
   pinMode(MODEM_RST, OUTPUT);
@@ -65,6 +67,7 @@ void setupModem() {
   digitalWrite(MODEM_PWRKEY, HIGH);
   digitalWrite(BLUE_LED, LOW);
   pinMode(MOTOPOMPE_PIN, OUTPUT);
+
   pinMode(Vanne1_PIN, OUTPUT);
   pinMode(Vanne2_PIN, OUTPUT);
 }
@@ -105,6 +108,50 @@ void setup() {
 }
 
 
+void getWeatherData(float &tempExt, float &humExt) {
+  String url = "/data/2.5/weather?q=" + city + "," + country + "&units=metric&appid=" + apiKey;
+  SerialMon.println("URL météo: " + url);
+
+  // Client HTTP standard
+  
+  HttpClient weatherClient(client, weatherHost, 80);  // Port 80 pour HTTP
+  weatherClient.setTimeout(10000);
+
+  SerialMon.println("Connexion à OpenWeatherMap...");
+  if (!weatherClient.connect(weatherHost, 80)) {
+    SerialMon.println("Échec connexion HTTP");
+    return;
+  }
+
+  weatherClient.get(url);
+
+  int statusCode = weatherClient.responseStatusCode();
+  String response = weatherClient.responseBody();
+
+  if (statusCode != 200) {
+    SerialMon.print("Erreur HTTP: ");
+    SerialMon.println(statusCode);
+    weatherClient.stop();
+    return;
+  }
+
+  DynamicJsonDocument doc(2048);
+  DeserializationError error = deserializeJson(doc, response);
+  if (error) {
+    SerialMon.print("Erreur parsing JSON: ");
+    SerialMon.println(error.c_str());
+    weatherClient.stop();
+    return;
+  }
+
+  tempExt = doc["main"]["temp"];
+  humExt = doc["main"]["humidity"];
+
+  SerialMon.printf("Météo: %.1f°C, %d%% humidité\n", tempExt, (int)humExt);
+  weatherClient.stop();
+  
+}
+
 void sendToFirebase(float temperature, float humidite, float humiditeSol) {
   if (!modem.isGprsConnected()) {
     SerialMon.println("Connexion GPRS...");
@@ -113,22 +160,24 @@ void sendToFirebase(float temperature, float humidite, float humiditeSol) {
       return;
     }
   }
-
   if (!client.connect(server, port)) {
     SerialMon.println("Échec connexion serveur Firebase");
     return;
   }
-
-  DynamicJsonDocument docPost(256);
+  float extTemp, extHum;
+  getWeatherData(extTemp, extHum);
+  DynamicJsonDocument docPost(1024);
   docPost["temperature"] = temperature;
   docPost["humidite"] = humidite;
   docPost["humiditeSol"] = humiditeSol;
+  docPost["temperatureExt"] = extTemp;
+  docPost["humiditeExt"] = extHum;
 
   String postData;
   serializeJson(docPost, postData);
 
   http_client.beginRequest();
-  http_client.patch(resource);  // /data.json
+  http_client.patch(resource);  // data.json
   http_client.sendHeader("Content-Type", "application/json");
   http_client.sendHeader("Content-Length", postData.length());
   http_client.sendHeader("auth", FIREBASE_AUTH);  // clé d'auth Firebase
@@ -149,24 +198,17 @@ void sendToFirebase(float temperature, float humidite, float humiditeSol) {
   http_client.stop();
 }
 
-/*void sendLoRaCommand(String command) {
-  LoRa.beginPacket();
-  LoRa.print(command);
-  if (!LoRa.endPacket(100)) { // Timeout 100ms
-    SerialMon.println("Erreur envoi LoRa");
-  }
-}*/
 
 void processFirebaseCommands() {
   if (!modem.isGprsConnected() && !modem.gprsConnect(apn, gprsUser, gprsPass)) {
     SerialMon.println("Échec reconnexion GPRS");
     return;
   }
-  if (LoRa.parsePacket() > 0) {  // Si données reçues pendant traitement
-    delay(50);                   // Laissez finir la réception
-    return;                      // Reporte le traitement
+  if (LoRa.parsePacket() > 0) {
+    delay(50);
+    return;
   }
-  if (!client.connect(server, port)) {
+  if (!secureClient.connect(server, port)) {
     SerialMon.println("Échec connexion Firebase");
     return;
   }
@@ -189,26 +231,24 @@ void processFirebaseCommands() {
     bool newVanne1 = doc["vanne1"];
     bool newVanne2 = doc["vanne2"];
 
-    // Contrôle des changements d'état
     if (newMotopompe != motopompeState) {
-      digitalWrite(MOTOPOMPE_PIN, newMotopompe ? HIGH : LOW);
+      digitalWrite(MOTOPOMPE_PIN, newMotopompe ? LOW : HIGH);
       motopompeState = newMotopompe;
       SerialMon.println("Motopompe: " + String(newMotopompe ? "ON" : "OFF"));
     }
 
     if (newVanne1 != vanne1State) {
-      digitalWrite(Vanne1_PIN, newVanne1 ?  HIGH : LOW);
+      digitalWrite(Vanne1_PIN, newVanne1 ? HIGH : LOW);
       vanne1State = newVanne1;
-      Serial.println("Vanne 1 désactivée - Niveau broche: " + String(newVanne1 ?  HIGH : LOW));
-
-      delay(100);  // Pause entre commandes
+      SerialMon.println("Vanne 1: " + String(newVanne1 ? "ON" : "OFF"));
+      delay(100);
     }
 
     if (newVanne2 != vanne2State) {
-      digitalWrite(Vanne2_PIN, newVanne2 ?  HIGH : LOW);
+      digitalWrite(Vanne2_PIN, newVanne2 ? HIGH : LOW);
       vanne2State = newVanne2;
-      Serial.println("Vanne 2 activée - Niveau broche: " +  String(newVanne2 ?  HIGH : LOW));
-      delay(100);  // Pause entre commandes
+      SerialMon.println("Vanne 2: " + String(newVanne2 ? "ON" : "OFF"));
+      delay(100);
     }
   }
 
@@ -216,7 +256,6 @@ void processFirebaseCommands() {
 }
 
 void loop() {
-  // Partie 1: Réception LoRa et envoi à Firebase
   if (LoRa.parsePacket()) {
     String message;
     while (LoRa.available()) {
@@ -229,11 +268,10 @@ void loop() {
     }
   }
 
-  // Partie 2: Vérification périodique des commandes Firebase
   if (millis() - lastFirebaseCheck > FIREBASE_CHECK_INTERVAL) {
     processFirebaseCommands();
     lastFirebaseCheck = millis();
   }
 
-  delay(10);  // Pause minimale pour stabilité
+  delay(10);
 }
