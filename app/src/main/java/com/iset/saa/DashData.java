@@ -13,6 +13,7 @@ public class DashData {
     public Long humidite;
     public Long humiditeSol;
     public Long humiditeExt;
+    public Long vitesseVent;
 
     public Boolean motopompe;
     public Boolean vanne1;
@@ -28,6 +29,7 @@ public class DashData {
             boolean motopompe,
             Long temperatureExt,
             Long humiditeExt,
+            Long vitesseVent,
             boolean vanne1,
             boolean vanne2
     ) {
@@ -36,6 +38,7 @@ public class DashData {
         this.humiditeSol = humiditeSol;
         this.temperatureExt = temperatureExt;
         this.humiditeExt = humiditeExt;
+        this.vitesseVent = vitesseVent;
         this.motopompe = motopompe;
         this.vanne1 = vanne1;
         this.vanne2 = vanne2;
@@ -48,6 +51,7 @@ public class DashData {
         result.put("humidite", humidite);
         result.put("temperatureExt", temperatureExt);
         result.put("humiditeExt", humiditeExt);
+        result.put("windExt", vitesseVent);
         result.put("humiditeSol", humiditeSol);
         result.put("motopompe", motopompe);
         result.put("vanne1", vanne1);

@@ -49,7 +49,7 @@ bool vanne1State = false;
 bool vanne2State = false;
 
 TinyGsm modem(Serial1);
-TinyGsmClient client(modem,1);                 // HTTP (port 80 pour météo) en utilisant soket 1 pour éviter le conflit avec firebase
+TinyGsmClient client(modem, 1);              // HTTP (port 80 pour météo) en utilisant soket 1 pour éviter le conflit avec firebase
 TinyGsmClientSecure secureClient(modem, 0);  // HTTPS pour Firebase en utilisant soket 0 pour éviter le conflit avec OWM
 HttpClient http_client(secureClient, server, port);
 
@@ -78,7 +78,6 @@ void setup() {
 
   setupModem();
   Serial1.begin(115200, SERIAL_8N1, MODEM_RX, MODEM_TX);
-
   SerialMon.println("Initializing modem...");
   modem.restart();
 
@@ -107,13 +106,12 @@ void setup() {
   SerialMon.println("LoRa ready");
 }
 
-
-void getWeatherData(float &tempExt, float &humExt) {
+void getWeatherData(float &tempExt, float &humExt, float &windSpeed) {
   String url = "/data/2.5/weather?q=" + city + "," + country + "&units=metric&appid=" + apiKey;
   SerialMon.println("URL météo: " + url);
 
   // Client HTTP standard
-  
+
   HttpClient weatherClient(client, weatherHost, 80);  // Port 80 pour HTTP
   weatherClient.setTimeout(10000);
 
@@ -135,7 +133,7 @@ void getWeatherData(float &tempExt, float &humExt) {
     return;
   }
 
-  DynamicJsonDocument doc(2048);
+  DynamicJsonDocument doc(4096);
   DeserializationError error = deserializeJson(doc, response);
   if (error) {
     SerialMon.print("Erreur parsing JSON: ");
@@ -146,10 +144,10 @@ void getWeatherData(float &tempExt, float &humExt) {
 
   tempExt = doc["main"]["temp"];
   humExt = doc["main"]["humidity"];
+  windSpeed = doc["wind"]["speed"];
 
-  SerialMon.printf("Météo: %.1f°C, %d%% humidité\n", tempExt, (int)humExt);
+  SerialMon.printf("Météo: %.1f°C, %d%% humidité, vent %.1f m/s\n", tempExt, (int)humExt, windSpeed);
   weatherClient.stop();
-  
 }
 
 void sendToFirebase(float temperature, float humidite, float humiditeSol) {
@@ -164,14 +162,15 @@ void sendToFirebase(float temperature, float humidite, float humiditeSol) {
     SerialMon.println("Échec connexion serveur Firebase");
     return;
   }
-  float extTemp, extHum;
-  getWeatherData(extTemp, extHum);
+  float extTemp, extHum, extWind;
+  getWeatherData(extTemp, extHum, extWind);
   DynamicJsonDocument docPost(1024);
   docPost["temperature"] = temperature;
   docPost["humidite"] = humidite;
   docPost["humiditeSol"] = humiditeSol;
   docPost["temperatureExt"] = extTemp;
   docPost["humiditeExt"] = extHum;
+  docPost["vitesseVent"] = extWind*3.6;
 
   String postData;
   serializeJson(docPost, postData);

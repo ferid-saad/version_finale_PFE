@@ -184,7 +184,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_humidity_64"
+                    android:drawableTop="@drawable/ic_humidity_ext"
+
                     android:text="HumExt"
                     android:textAlignment="center"
                     android:textColor="@color/black" />
@@ -196,7 +197,7 @@
                     android:text="0%"
                     android:textAlignment="center"
                     android:textColor="@color/dark_blue"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -212,7 +213,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_temp_64"
+                    android:drawableTop="@drawable/ic_temp_ext"
                     android:text="TempExt"
                     android:textAlignment="center"
                     android:textColor="@color/black" />
@@ -224,7 +225,35 @@
                     android:text="0°"
                     android:textAlignment="center"
                     android:textColor="@color/dark_blue"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/cadre"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_wind"
+                    android:text="vitesse de vent"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/windExt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0 km/h"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="18dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
